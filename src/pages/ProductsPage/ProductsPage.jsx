@@ -37,7 +37,7 @@ const ProductsPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <h2>Loading...</h2>;
   }
 
   const elements = products.map(({ id, name, description }) => (
