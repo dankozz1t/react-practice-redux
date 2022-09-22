@@ -55,6 +55,7 @@ const ProductsPage = () => {
     <li key={index}>
       <h3>{name}</h3>
       <p>{description}</p>
+      <button type="button">Buy</button>
     </li>
   ));
 

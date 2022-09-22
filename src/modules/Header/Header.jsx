@@ -15,7 +15,12 @@ const Header = () => {
     </NavLink>
   ));
 
-  return menuElements;
+  return (
+    <>
+      <span>Logo</span>
+      {menuElements}
+    </>
+  );
 };
 
 export default Header;
