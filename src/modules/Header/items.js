@@ -8,8 +8,8 @@ const headerItems = [
   },
   {
     id: nanoid(),
-    to: '/basket',
-    text: 'Basket',
+    to: '/cart',
+    text: 'Cart',
   },
 ];
 

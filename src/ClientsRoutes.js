@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import ProductsPage from './pages/ProductsPage';
-import CartPage from './pages/CartPage';
+const ProductsPage = lazy(() => import('./pages/ProductsPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
 
 const ClientsRoutes = () => {
   return (
-    <Routes>
-      <Route path="/products" element={<ProductsPage />} />
-      <Route path="/basket" element={<CartPage />} />
-    </Routes>
+    <Suspense fallback={<>Loading</>}>
+      <Routes>
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/cart" element={<CartPage />} />
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -6,16 +6,9 @@ const instanceProducts = axios.create({
   baseURL: 'https://62becfba0bc9b125615fd0f7.mockapi.io/api/products?',
 });
 
-const fetchProducts = page =>
-  instanceProducts.get('', { params: { page, limit: LIMIT_PRODUCTS } });
-
-const fetchTotalPage = async () => {
-  return await instanceProducts.get('').then(({ data }) => {
-    return Math.ceil(data.length / 10) + 1;
-  });
-};
+const fetchProducts = () =>
+  instanceProducts.get('', { params: { page: 1, limit: LIMIT_PRODUCTS } });
 
 export const api = {
   fetchProducts,
-  fetchTotalPage,
 };

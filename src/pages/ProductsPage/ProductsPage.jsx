@@ -1,61 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { api } from 'shared/service/api.service';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { ADD_CART } from '../../redux/cart/cart-types';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadMore, setIsLoadMore] = useState(true);
-  const [totalPage, setTotalPage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(searchParams.get('page') ?? 1);
+  const cart = useSelector(state => state.cart);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    setIsLoading(true);
     try {
-      api.fetchTotalPage().then(data => {
-        setTotalPage(data);
-      });
+      api
+        .fetchProducts()
+        .then(({ data }) => {
+          setProducts(state => [...state, ...data]);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } catch (error) {
       console.log(error.message);
     }
   }, []);
 
-  useEffect(() => {
-    if (totalPage === page) {
-      setIsLoadMore(false);
+  const handleBuyClick = item => {
+    if (cart.some(({ id }) => id === item.id)) {
+      alert(`Duplicate product ${item.name}`);
       return;
     }
 
-    setIsLoading(true);
-    try {
-      api
-        .fetchProducts(page)
-        .then(({ data }) => {
-          setProducts(state => [...state, ...data]);
-        })
-        .finally(() => {
-          setIsLoading(true);
-        });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [page, totalPage]);
-
-  const handleLoadMoreClick = () => {
-    setSearchParams(page !== 1 ? { page } : {});
-    setPage(page + 1);
+    dispatch({ type: ADD_CART, payload: item });
   };
 
-  if (!isLoading) {
+  if (isLoading) {
     return <>Loading...</>;
   }
 
-  const elements = products.map(({ name, description }, index) => (
-    <li key={index}>
+  const elements = products.map(({ id, name, description }) => (
+    <li key={id}>
       <h3>{name}</h3>
       <p>{description}</p>
-      <button type="button">Buy</button>
+      <button
+        type="button"
+        onClick={() => {
+          handleBuyClick({ id, name, description });
+        }}
+      >
+        Buy
+      </button>
     </li>
   ));
 
@@ -65,11 +61,6 @@ const ProductsPage = () => {
       <ul style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
         {elements}
       </ul>
-      {isLoadMore && (
-        <button type="button" onClick={handleLoadMoreClick}>
-          Load more
-        </button>
-      )}
     </>
   );
 };
