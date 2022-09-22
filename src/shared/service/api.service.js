@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-const instance = axios.create({
-  baseURL: 'https://swapi.dev/api/people/',
-});
-const fetchCharacters = () => instance.get(``);
-
-const fetchCharactersById = id => instance.get(`/${id}`);
-
 const LIMIT_PRODUCTS = 10;
 
 const instanceProducts = axios.create({
@@ -16,15 +9,13 @@ const instanceProducts = axios.create({
 const fetchProducts = page =>
   instanceProducts.get('', { params: { page, limit: LIMIT_PRODUCTS } });
 
-const fetchTotalPage = () => {
-  return instanceProducts.get('').then(({ data }) => {
+const fetchTotalPage = async () => {
+  return await instanceProducts.get('').then(({ data }) => {
     return Math.ceil(data.length / 10) + 1;
   });
 };
 
 export const api = {
-  fetchCharacters,
-  fetchCharactersById,
   fetchProducts,
   fetchTotalPage,
 };
