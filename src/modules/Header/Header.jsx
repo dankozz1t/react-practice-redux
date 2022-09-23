@@ -10,7 +10,7 @@ const getActiveClassName = ({ isActive }) => {
 };
 
 const Header = () => {
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector(state => state.cart.items);
 
   const menuElements = headerItems.map(({ id, text, to }) => (
     <NavLink end className={getActiveClassName} key={id} to={to}>

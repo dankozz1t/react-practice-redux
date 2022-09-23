@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { api } from 'shared/service/api.service';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ADD_CART } from '../../redux/cart/cart-types';
+import { addCart } from '../../redux/cart/cart-slice';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,12 +28,13 @@ const ProductsPage = () => {
   }, []);
 
   const handleBuyClick = item => {
-    if (cart.some(({ id }) => id === item.id)) {
+    if (cart.some(({ item: { id } }) => id === item.id)) {
       alert(`Duplicate product ${item.name}`);
+
       return;
     }
 
-    dispatch({ type: ADD_CART, payload: item });
+    dispatch(addCart({ item }));
   };
 
   if (isLoading) {

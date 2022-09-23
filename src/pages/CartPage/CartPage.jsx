@@ -1,19 +1,25 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { REMOVE_CART } from '../../redux/cart/cart-types';
+import { deleteCart } from '../../redux/cart/cart-slice';
 
 const CartPage = () => {
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  const elements = cart.map(({ id, name, description }) => (
+  if (!cart.length) {
+    return <></>;
+  }
+
+  console.log(cart);
+
+  const elements = cart.map(({ item: { id, name, description } }) => (
     <li key={id}>
       <h3>{name}</h3>
       <p>{description}</p>
       <button
         type="button"
         onClick={() => {
-          dispatch({ type: REMOVE_CART, payload: id });
+          dispatch(deleteCart({ id }));
         }}
       >
         Delete
